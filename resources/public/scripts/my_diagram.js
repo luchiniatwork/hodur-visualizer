@@ -20,7 +20,7 @@ function updateInfoBox(mousePt, data) {
       childTitle.className = "infoTitle";
       childTitle.textContent = tag.key;
       row.appendChild(childTitle);
-    
+
       var childValue = document.createElement("div");
       childValue.className = "infoValue";
       childValue.textContent = tag.value;
@@ -28,7 +28,7 @@ function updateInfoBox(mousePt, data) {
       infobox.appendChild(row);
     }
   }
-  
+
   box.style.left = mousePt.x + 30 + "px";
   box.style.top = mousePt.y + 20 + "px";
 }
@@ -75,12 +75,8 @@ function showToolTip(obj, diagram) {
     if (doc.distanceSquaredPoint(node.getDocumentPoint(go.Spot.TopCenter)) < closestDist) {
       closest = node;
     }
-    console.log(closest.data);
-    
     updateInfoBox(e.viewPoint, closest.data);
   } else {
-    //if (lastStroked !== null) lastStroked.stroke = null;
-    //lastStroked = null;
     document.getElementById("infoBoxHolder").innerHTML = "";
   }
 }
