@@ -17,8 +17,7 @@ html, body {
     background-color: whitesmoke;
     opacity:0.9;
     position: relative;
-    width: 170px;
-    //height: 60px;
+    width: 250px;
     font-family: arial, helvetica, sans-serif;
     font-weight: bold;
     font-size: 11px;
@@ -32,6 +31,26 @@ html, body {
     content: " ";
     clear: both;
     height: 0;
+}
+
+div.infoRow {
+    width: 100%;
+    display: inline-block;
+    border-bottom-style: dotted;
+    border-bottom-width: thin;
+}
+
+div.infoTitle {
+    width: 100px;
+    font-weight: normal;
+    color:  #787878;
+    float: left;
+}
+div.infoValue {
+    width: 150px;
+    text-align: right;
+    float: right;
+    font-weight: normal;
 }
 
 .diagramDiv {

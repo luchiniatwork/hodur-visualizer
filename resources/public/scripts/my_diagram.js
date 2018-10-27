@@ -6,22 +6,29 @@ function updateInfoBox(mousePt, data) {
   var infobox = document.createElement("div");
   infobox.id = "infoBox";
   box.appendChild(infobox);
-  for (var i = 0; i < 9; i++) {
-    var child = document.createElement("div");
-    child.textContent = "blalblalbalbal " + i;
-    // switch (i) {
-    // case 0: child.textContent = data.species; break;
-    // case 1: child.className = "infoTitle"; child.textContent = "Sepal Length"; break;
-    // case 2: child.className = "infoValues"; child.textContent = data.sepalLength; break;
-    // case 3: child.className = "infoTitle"; child.textContent = "Sepal Width"; break;
-    // case 4: child.className = "infoValues"; child.textContent = data.sepalWidth; break;
-    // case 5: child.className = "infoTitle"; child.textContent = "Petal Length"; break;
-    // case 6: child.className = "infoValues"; child.textContent = data.petalLength; break;
-    // case 7: child.className = "infoTitle"; child.textContent = "Petal Width"; break;
-    // case 8: child.className = "infoValues"; child.textContent = data.petalWidth; break;
-    // }
-    infobox.appendChild(child);
+  var header = document.createElement("div");
+  header.textContent = data.key || data.name;
+  infobox.appendChild(header);
+
+  if (data.tags) {
+    for (var i = 0; i < data.tags.length; i++) {
+      var row = document.createElement("div");
+      row.className = "infoRow";
+
+      var tag = data.tags[i];
+      var childTitle = document.createElement("div");
+      childTitle.className = "infoTitle";
+      childTitle.textContent = tag.key;
+      row.appendChild(childTitle);
+    
+      var childValue = document.createElement("div");
+      childValue.className = "infoValue";
+      childValue.textContent = tag.value;
+      row.appendChild(childValue);
+      infobox.appendChild(row);
+    }
   }
+  
   box.style.left = mousePt.x + 30 + "px";
   box.style.top = mousePt.y + 20 + "px";
 }
@@ -51,33 +58,26 @@ function showToolTip(obj, diagram) {
     console.log("Aqui");
     var node = obj.part;
     var e = diagram.lastInput;
-    //var shape = node.findObject("SHAPE");
-    //shape.stroke = "white";
-    //if (lastStroked !== null && lastStroked !== shape) lastStroked.stroke = null;
-    //lastStroked = shape;
-    console.log(node.data);
 
     var elements = node.findObject("LIST").elements;
-    elements.each(function(e) {
-      console.log(e.getDocumentPoint(go.Spot.Center));
-    });
-
-    console.log("---");
     var doc = e.documentPoint;
     // now find the one that is closest to e.documentPoint
     var closest = null;
     var closestDist = 999999999;
     elements.each(function(e) {
       var dist = doc.distanceSquaredPoint(e.getDocumentPoint(go.Spot.Center));
-      //console.log(dist);
+
       if (dist < closestDist) {
         closestDist = dist;
         closest = e;
       }
     });
+    if (doc.distanceSquaredPoint(node.getDocumentPoint(go.Spot.TopCenter)) < closestDist) {
+      closest = node;
+    }
     console.log(closest.data);
     
-    updateInfoBox(e.viewPoint, node.data);
+    updateInfoBox(e.viewPoint, closest.data);
   } else {
     //if (lastStroked !== null) lastStroked.stroke = null;
     //lastStroked = null;
@@ -231,11 +231,29 @@ function init() {
                { name: "Quantity", iskey: false, figure: "MagneticData", color: greengrad },
                { name: "Discount", iskey: false, figure: "MagneticData", color: greengrad } ] },
     { key: "Order Details2",
-      items: [ { name: "OrderID", iskey: true, figure: "Decision", color: yellowgrad, foo: "Bar" },
-               { name: "ProductID", iskey: true, figure: "Decision", color: yellowgrad },
-               { name: "UnitPrice", iskey: false, figure: "MagneticData", color: greengrad },
-               { name: "Quantity", iskey: false, figure: "MagneticData", color: greengrad },
-               { name: "Discount", iskey: false, figure: "MagneticData", color: greengrad } ] }
+      tags: [{ key: ":datomic/asd", value: "false" },
+             { key: ":datomic/bla", value: "true" },
+             { key: ":datomic/qwe", value: "true" }],
+      items: [ { name: "OrderID", iskey: true, figure: "Decision", color: yellowgrad,
+                 tags: [{ key: ":datomic/tag", value: "true" },
+                        { key: ":datomic/bla", value: "true" },
+                        { key: ":datomic/qwe", value: "true" }] },
+               { name: "ProductID", iskey: true, figure: "Decision", color: yellowgrad,
+                 tags: [{ key: ":datomic/tag", value: "true" },
+                        { key: ":datomic/bla", value: "true" },
+                        { key: ":datomic/qwe", value: "true" }]},
+               { name: "UnitPrice", iskey: false, figure: "MagneticData", color: greengrad,
+                 tags: [{ key: ":datomic/tag", value: "true" },
+                        { key: ":datomic/bla", value: "true" },
+                        { key: ":datomic/qwe", value: "true" }]},
+               { name: "Quantity", iskey: false, figure: "MagneticData", color: greengrad,
+                 tags: [{ key: ":datomic/tag", value: "true" },
+                        { key: ":datomic/bla", value: "very long description that might span across several lines" },
+                        { key: ":datomic/qwe", value: "true" }]},
+               { name: "Discount", iskey: false, figure: "MagneticData", color: greengrad ,
+                 tags: [{ key: ":datomic/tag", value: "true" },
+                        { key: ":datomic/bla", value: "true" },
+                        { key: ":datomic/qwe", value: "true" }]} ] }
   ];
   var linkDataArray = [
     { from: "Products", to: "Suppliers", text: "0..N", toText: "1" },
