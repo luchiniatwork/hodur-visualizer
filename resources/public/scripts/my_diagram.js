@@ -51,14 +51,34 @@ function showToolTip(obj, diagram) {
     console.log("Aqui");
     var node = obj.part;
     var e = diagram.lastInput;
-    var shape = node.findObject("SHAPE");
+    //var shape = node.findObject("SHAPE");
     //shape.stroke = "white";
     //if (lastStroked !== null && lastStroked !== shape) lastStroked.stroke = null;
     //lastStroked = shape;
     console.log(node.data);
+
+    var elements = node.findObject("LIST").elements;
+    elements.each(function(e) {
+      console.log(e.getDocumentPoint(go.Spot.Center));
+    });
+
+    console.log("---");
+    var doc = e.documentPoint;
+    // now find the one that is closest to e.documentPoint
+    var closest = null;
+    var closestDist = 999999999;
+    elements.each(function(e) {
+      var dist = doc.distanceSquaredPoint(e.getDocumentPoint(go.Spot.Center));
+      //console.log(dist);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = e;
+      }
+    });
+    console.log(closest.data);
+    
     updateInfoBox(e.viewPoint, node.data);
   } else {
-    console.log("Aqui2");
     //if (lastStroked !== null) lastStroked.stroke = null;
     //lastStroked = null;
     document.getElementById("infoBoxHolder").innerHTML = "";
@@ -83,7 +103,6 @@ function init() {
         layout: $(go.ForceDirectedLayout),
         "undoManager.isEnabled": true,
         mouseOver: doMouseOver
-        
       });
 
   // define several shared Brushes
@@ -212,7 +231,7 @@ function init() {
                { name: "Quantity", iskey: false, figure: "MagneticData", color: greengrad },
                { name: "Discount", iskey: false, figure: "MagneticData", color: greengrad } ] },
     { key: "Order Details2",
-      items: [ { name: "OrderID", iskey: true, figure: "Decision", color: yellowgrad },
+      items: [ { name: "OrderID", iskey: true, figure: "Decision", color: yellowgrad, foo: "Bar" },
                { name: "ProductID", iskey: true, figure: "Decision", color: yellowgrad },
                { name: "UnitPrice", iskey: false, figure: "MagneticData", color: greengrad },
                { name: "Quantity", iskey: false, figure: "MagneticData", color: greengrad },
