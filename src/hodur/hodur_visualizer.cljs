@@ -1,11 +1,7 @@
 (ns ^:figwheel-hooks hodur.hodur-visualizer
-  (:require
-   [goog.dom :as gdom]))
-
-(println "This text is printed from src/hodur/hodur_visualizer.cljs. Go ahead and edit it and see reloading in action.")
-
-(defn multiply [a b] (* a b))
-
+  (:require [goog.dom :as gdom]
+            [hodur-engine.core :as engine]
+            [hodur.schema :as schema]))
 
 ;; define your app data so that it doesn't get over-written on reload
 (defonce app-state (atom {:text "Hello world!"}))
@@ -13,23 +9,14 @@
 (defn get-app-element []
   (gdom/getElement "app"))
 
-
-(def data #js [#js {:key "Products"
-                    :items #js [#js {:name "ProductID"
-                                     :iskey true
-                                     :figure "Decision"
-                                     :color "purple"}
-                                #js {:name "ProductName"
-                                     :iskey false
-                                     :figure "Decision"
-                                     :color "purple"}]}])
-
-(def data2 (clj->js [{:key "Bla1"} {:key "Bla4"}]))
-
-(def links #js [])
+(def conn (engine/init-schema '[Person [first-name last-name]
+                                Company [^A aa ^B bb c]
+                                A [^Person p]
+                                B [^Company c]]))
 
 (defn ^:export set-model []
-  (set! (.-model js/myDiagram) (js/go.GraphLinksModel. data2)))
+  (let [{:keys [nodes links]} (schema/schema conn)]
+    (set! (.-model js/myDiagram) (js/go.GraphLinksModel. nodes links))))
 
 ;; specify reload hook with ^;after-load metadata
 (defn ^:after-load on-reload []
