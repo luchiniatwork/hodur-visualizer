@@ -4,33 +4,33 @@ function updateInfoBox(mousePt, data) {
   var box = document.getElementById("infoBoxHolder");
   box.innerHTML = "";
   var infobox = document.createElement("div");
-  infobox.id = "infoBox";
-  box.appendChild(infobox);
-  var header = document.createElement("div");
-  header.textContent = data.key || data.name;
-  infobox.appendChild(header);
+    infobox.id = "infoBox";
+    box.appendChild(infobox);
+    var header = document.createElement("div");
+    header.textContent = data.key || data.name;
+    infobox.appendChild(header);
 
-  if (data.tags) {
-    for (var i = 0; i < data.tags.length; i++) {
-      var row = document.createElement("div");
-      row.className = "infoRow";
+    if (data.tags) {
+      for (var i = 0; i < data.tags.length; i++) {
+        var row = document.createElement("div");
+        row.className = "infoRow";
 
-      var tag = data.tags[i];
-      var childTitle = document.createElement("div");
-      childTitle.className = "infoTitle";
-      childTitle.textContent = tag.key;
-      row.appendChild(childTitle);
+        var tag = data.tags[i];
+        var childTitle = document.createElement("div");
+        childTitle.className = "infoTitle";
+        childTitle.textContent = tag.key;
+        row.appendChild(childTitle);
 
-      var childValue = document.createElement("div");
-      childValue.className = "infoValue";
-      childValue.textContent = tag.value;
-      row.appendChild(childValue);
-      infobox.appendChild(row);
+        var childValue = document.createElement("div");
+        childValue.className = "infoValue";
+        childValue.textContent = tag.value;
+        row.appendChild(childValue);
+        infobox.appendChild(row);
+      }
     }
-  }
 
-  box.style.left = mousePt.x + 30 + "px";
-  box.style.top = mousePt.y + 20 + "px";
+    box.style.left = mousePt.x + 30 + "px";
+    box.style.top = mousePt.y + 20 + "px";
 }
 
 // Called when the mouse is over the diagram's background
@@ -55,7 +55,6 @@ function doMouseOver(e) {
 // Called with a Node (or null) that the mouse is over or near
 function showToolTip(obj, diagram) {
   if (obj !== null) {
-    console.log("Aqui");
     var node = obj.part;
     var e = diagram.lastInput;
 
@@ -66,12 +65,12 @@ function showToolTip(obj, diagram) {
     var closestDist = 999999999;
     elements.each(function(e) {
       var dist = doc.distanceSquaredPoint(e.getDocumentPoint(go.Spot.Center));
-
       if (dist < closestDist) {
         closestDist = dist;
         closest = e;
       }
     });
+    // the mouse maybe closer to the header of the node
     if (doc.distanceSquaredPoint(node.getDocumentPoint(go.Spot.TopCenter)) < closestDist) {
       closest = node;
     }
@@ -130,7 +129,8 @@ function init() {
         fromSpot: go.Spot.AllSides,
         toSpot: go.Spot.AllSides,
         isShadowed: false,
-        toolTip: myToolTip
+        toolTip: myToolTip,
+        // isAnimated: false
       },
       new go.Binding("location", "location").makeTwoWay(),
       // whenever the PanelExpanderButton changes the visible property of the "LIST" panel,
@@ -256,5 +256,7 @@ function init() {
     { from: "Products", to: "Categories", text: "0..N", toText: "1" },
     { from: "Order Details", to: "Products", text: "0..N", toText: "1" }
   ];
-  myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+  //myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+
+  hodur.hodur_visualizer.set_model();
 }
