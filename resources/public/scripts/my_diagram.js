@@ -123,7 +123,7 @@ function init() {
   // define the Node template, representing an entity
   myDiagram.nodeTemplate =
     $(go.Node, "Auto",  // the whole node panel
-      { selectionAdorned: false,
+      { selectionAdorned: true,
         resizable: false,
         layoutConditions: go.Part.LayoutStandard & ~go.Part.LayoutNodeSized,
         fromSpot: go.Spot.AllSides,
@@ -147,24 +147,33 @@ function init() {
           {
             row: 0, alignment: go.Spot.Center,
             margin: new go.Margin(0, 14, 0, 2),  // leave room for Button
+            font: "14px arial"
+          },
+          new go.Binding("text", "qualifier")),
+        $(go.TextBlock,
+          {
+            alignment: go.Spot.Center,
+            margin: new go.Margin(0, 14, 0, 2),  // leave room for Button
             font: "bold 16px arial"
           },
-          new go.Binding("text", "key")),
+          new go.Binding("text", "key"),
+          new go.Binding("row", "nameRow")),
         // the collapse/expand button
         $("PanelExpanderButton", "LIST",  // the name of the element whose visibility this button toggles
-          { row: 0, alignment: go.Spot.TopRight }),
+          { alignment: go.Spot.TopRight },
+          new go.Binding("row", "nameRow")),
         // the list of Panels, each showing an attribute
         $(go.Panel, "Vertical",
           {
             name: "LIST",
-            row: 1,
             padding: 3,
             alignment: go.Spot.TopLeft,
             defaultAlignment: go.Spot.Left,
             stretch: go.GraphObject.Horizontal,
             itemTemplate: itemTempl
           },
-          new go.Binding("itemArray", "items"))
+          new go.Binding("itemArray", "items"),
+          new go.Binding("row", "fieldsRow"))
        )  // end Table Panel
      );  // end Node
 
@@ -180,7 +189,8 @@ function init() {
         curve: go.Link.JumpOver
       },
       $(go.Shape,  // the link shape
-        { stroke: "#303B45", strokeWidth: 2}),
+        { stroke: "#303B45", strokeWidth: 2},
+        new go.Binding("strokeDashArray", "strokeDashArray")),
       $(go.TextBlock,  // the "from" label
         {
           textAlign: "center",
@@ -192,8 +202,8 @@ function init() {
         },
         new go.Binding("text", "text")),
       $(go.Shape, // the arrow on the "to" side
-        { scale: 1,
-          toArrow: "OpenTriangle"}),
+        { scale: 1.5, fill: "#FFFFFF" },
+        new go.Binding("toArrow", "toArrow")),
       $(go.TextBlock,  // the "to" label
         {
           textAlign: "center",
