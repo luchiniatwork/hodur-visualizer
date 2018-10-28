@@ -180,7 +180,7 @@ function init() {
         curve: go.Link.JumpOver
       },
       $(go.Shape,  // the link shape
-        { stroke: "#303B45", strokeWidth: 2 }),
+        { stroke: "#303B45", strokeWidth: 2}),
       $(go.TextBlock,  // the "from" label
         {
           textAlign: "center",
@@ -191,6 +191,9 @@ function init() {
           segmentOrientation: go.Link.OrientUpright
         },
         new go.Binding("text", "text")),
+      $(go.Shape, // the arrow on the "to" side
+        { scale: 1,
+          toArrow: "OpenTriangle"}),
       $(go.TextBlock,  // the "to" label
         {
           textAlign: "center",
